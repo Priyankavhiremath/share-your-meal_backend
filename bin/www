@@ -32,15 +32,30 @@ const io = socket(server, {
   }
 })
 
-const users = []
+let users = []
 
 io.on('connection', (socket) => {
-socket.emit('myId', socket.id)
+  socket.emit('myId', socket.id)
 //------------------------------------------
-socket.on('newGuestUser', (newGuestUser)=> {
-users.push(newGuestUser)
-io.emit('connectedUsers', users)
+  socket.on('newGuestUser', (newGuestUser)=> {
+    users.push(newGuestUser)
+    io.emit('connectedUsers', users)
+  })
+// ------------------------------------------
+  socket.on('callUser', ({userToCall, from, signal}) => {
+    console.log({userToCall, from})
+    io.to(userToCall).emit('incomingCall', { from, signal })
+  })
+// ------------------------------------------
+socket.on('acceptCall', ({userWhoCalled, signal}) => {
+    io.to(userWhoCalled).emit('acceptedCall', signal)
 })
+// ------------------------------------------
+socket.on("disconnect", (reason) => {
+  console.log(reason)
+  users = users.filter(user => user.id !== socket.id)
+  io.emit('connectedUsers', users)
+});
 })
 
 //-----------------------------------------------------------------------------------------------------------------------
