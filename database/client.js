@@ -1,7 +1,7 @@
 
 const mongoose = require("mongoose");
 mongoose
-  .connect("mongodb+srv://m001-student:m001-mongodb-basics@sandbox.nv4lx.mongodb.net/SYM?retryWrites=true&w=majority", {
+  .connect(process.env.MONGO_DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
