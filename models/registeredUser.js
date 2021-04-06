@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 
 const registeredUserSchema = new mongoose.Schema({
@@ -13,6 +14,7 @@ const registeredUserSchema = new mongoose.Schema({
     },
     languages : [{type: String, min: 2, max: 2, required: true}],
     meetings: [{ type: Schema.Types.ObjectId, ref: 'Meeting' }]
+    //why is this crashing?
 });
 
 const RegisteredUser = mongoose.model('Register', registeredUserSchema);
@@ -20,6 +22,7 @@ const RegisteredUser = mongoose.model('Register', registeredUserSchema);
 module.exports = RegisteredUser;
 
 
+//Ben's example of our User schema
 // email
 // password
 // nickname

@@ -13,13 +13,3 @@ const guestSchema = new mongoose.Schema({
 const Guest = mongoose.model('Guest', guestSchema);
 
 module.exports = Guest;
-
-
-
-// var userSchema = new mongooseSchema({
-//     userType: {
-//          type: String,
-//          enum : ['user','admin'],
-//          default: 'user'
-//      },
-//  })

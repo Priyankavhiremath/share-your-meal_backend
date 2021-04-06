@@ -34,17 +34,68 @@ const createOneUser = async (req, res, next) => {
 }
 
 // UPDATE
-const updateOneUser = async (req, res, next) => {
-    const { email, password, nickName, location, languages } = req.body;
+const updateEmail = async (req, res, next) => {
+    const { oldEmail, newEmail } = req.body;
     try{
-        const updateUser = await RegisteredUser.create({ email, password, nickName, location, languages })
+        const updateUser = await RegisteredUser.findOneAndUpdate({"email": oldEmail}, {"email": newEmail}, {new: true})
         res.json(updateUser)
     }catch(e){
         res.status(500).send(e.message)
     }
 }
 
+const updateNickName = async (req, res, next) => {
+    const { oldNickname, newNickName } = req.body;
+    try{
+        const updateUser = await RegisteredUser.findOneAndUpdate({"nickName": oldNickName}, {"nickName": newNickName}, {new: true})
+        res.json(updateUser)
+    }catch(e){
+        res.status(500).send(e.message)
+    }
+}
+
+const updateLocation = async (req, res, next) => {
+    const { oldLocation, newLocation } = req.body;
+    try{
+        const updateUser = await RegisteredUser.findOneAndUpdate({"location": oldLocation}, {"location": newLocation}, {new: true})
+        res.json(updateUser)
+    }catch(e){
+        res.status(500).send(e.message)
+    }
+}
+
+const updateLanguages = async (req, res, next) => {
+    const { oldLanguages, newLanguages } = req.body;
+    try{
+        const updateUser = await RegisteredUser.findOneAndUpdate({"languages": oldLanguages}, {"languages": newLanguages}, {new: true})
+        res.json(updateUser)
+    }catch(e){
+        res.status(500).send(e.message)
+    }
+}
+
+
 // DELETE
 
+const deleteOneUser = async (req, res) => {
+    const { id } = req.params
+    try {
+        const deletedUser = await RegisteredUser.findByIdAndDelete(id)
+        if (!deletedUser) res.status(404).send('No such user')
+        res.json(deletedUser)
+    } catch (e) {
+        res.status(500).send(e.message)
+    }
+}
 
-module.exports = { getAllUsers, getOneUser, createOneUser}
+
+module.exports = {
+    getAllUsers,
+    getOneUser,
+    createOneUser,
+    updateEmail,
+    updateNickName,
+    updateLocation,
+    updateLanguages,
+    deleteOneUser
+}
