@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 const { getAllUsers,
   getOneUser,
@@ -10,7 +10,9 @@ const { getAllUsers,
   updateLanguages,
   deleteOneUser } = require('../controllers/registerUserController')
 
-router.get('/', getAllUsers)
+  const authorize = require('../middlewares/authorizeUser')
+
+router.get('/', authorize, getAllUsers)
 router.get('/:id', getOneUser)
 router.post('/', createOneUser)
 router.put('/:email', updateEmail)

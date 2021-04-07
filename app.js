@@ -6,10 +6,11 @@ const logger = require('morgan');
 const cors = require('cors')
 require ('./database/client')
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/usersRouter');
+const indexRouter = require('./routes/index')
+const usersRouter = require('./routes/usersRouter')
 const meetingRouter= require('./routes/meetingRouter')
 const guestRouter = require('./routes/guestRouter')
+const authRouter = require('./routes/authRouter')
 
 const app = express();
 app.use(cors())
@@ -20,9 +21,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', indexRouter)
+app.use('/users', usersRouter)
 app.use('/meetings', meetingRouter)
 app.use('/guests', guestRouter)
+app.use('/auth', authRouter)
 
 module.exports = app;
