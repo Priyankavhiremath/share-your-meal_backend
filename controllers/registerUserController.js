@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt')
 
 // READ
 const getAllUsers = async (req, res, next) => {
-    // console.log(req.headers)
     try{
         const getUsers = await RegisteredUser.find()
         res.json(getUsers)
@@ -25,15 +24,6 @@ const getOneUser = async(req, res, next) => {
 }
 
 // CREATE
-// const createOneUser = async (req, res, next) => {
-//     const { email, password, nickName, location, languages } = req.body;
-//     try{
-//         const createUser = await RegisteredUser.create({ email, password, nickName, location, languages })
-//         res.json(createUser)
-//     }catch(e){
-//         res.status(500).send(e.message)
-//     }
-// }
 const createOneUser = async (req, res, next) => {
     const { email, password, nickName, location, languages } = req.body;
     try{
@@ -48,42 +38,13 @@ const createOneUser = async (req, res, next) => {
 }
 
 // UPDATE
-const updateEmail = async (req, res, next) => {
-    const { oldEmail, newEmail } = req.body;
+const update = async (req, res, next) => {
+    const { id } = req.params;
+    const { property, value } = req.body;
+    console.log({id, property, value})
     try{
-        const updateUser = await RegisteredUser.findOneAndUpdate({"email": oldEmail}, {"email": newEmail}, {new: true})
-        res.json(updateUser)
-    }catch(e){
-        res.status(500).send(e.message)
-    }
-}
-
-const updateNickName = async (req, res, next) => {
-    const { oldNickname, newNickName } = req.body;
-    console.log(req.body)
-    try{
-        const updateUser = await RegisteredUser.findOneAndUpdate({"nickName": oldNickname}, {"nickName": newNickName}, {new: true})
-        res.json(updateUser)
-    }catch(e){
-        res.status(500).send(e.message)
-    }
-}
-
-const updateLocation = async (req, res, next) => {
-    const { oldLocation, newLocation } = req.body;
-    try{
-        const updateUser = await RegisteredUser.findOneAndUpdate({"location": oldLocation}, {"location": newLocation}, {new: true})
-        res.json(updateUser)
-    }catch(e){
-        res.status(500).send(e.message)
-    }
-}
-
-const updateLanguages = async (req, res, next) => {
-    const { oldLanguages, newLanguages } = req.body;
-    try{
-        const updateUser = await RegisteredUser.findOneAndUpdate({"languages": oldLanguages}, {"languages": newLanguages}, {new: true})
-        res.json(updateUser)
+        const updatedUser = await RegisteredUser.findOneAndUpdate({"_id": id}, {[property]: value}, {new: true})
+        res.json(updatedUser)
     }catch(e){
         res.status(500).send(e.message)
     }
@@ -106,9 +67,6 @@ module.exports = {
     getAllUsers,
     getOneUser,
     createOneUser,
-    updateEmail,
-    updateNickName,
-    updateLocation,
-    updateLanguages,
-    deleteOneUser
+    deleteOneUser,
+    update
 }

@@ -10,8 +10,8 @@ const registeredUserSchema = new mongoose.Schema({
     lastLogin: { type: Date, default: Date.now },
     status: { type: String, enum: ['online', 'offline'], default: 'offline' },
     location: {
-        country: {type: String, min: 2, max: 2, required: true},//how to transform user input into alpha2 code?
-        city: {type: String, min: 2, max: 2, required: true} //how to transform user input into alpha2 code?
+        country: {type: String, min: 2, max: 2, required: true},
+        city: {type: String, min: 2, max: 2, required: true} 
     },
     languages : [{type: String, min: 2, max: 2, required: true}],
     meetings: [{ type: Schema.Types.ObjectId, ref: 'Meeting' }]
@@ -27,24 +27,6 @@ registeredUserSchema.methods.createToken = function () {
 const RegisteredUser = mongoose.model('Register', registeredUserSchema);
 
 module.exports = RegisteredUser;
-
-
-//Ben's example of our User schema
-// email
-// password
-// nickname
-// lastLogin: timestamp
-// status: enum ['online', 'offline']
-// location: {
-//   country: ISO alpha2 code
-//   city: ?
-// }
-// languages: [ISO alpha2 code]
-// meetings: [{
-//  talkedTo: ObjectId()
-//   start: timestamp
-//   end: timestamp
-// }]
 
 // OPTIONAL:
 // favoriteUsers: [ObjectId()]
