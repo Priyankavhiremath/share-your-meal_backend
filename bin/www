@@ -4,17 +4,16 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('share-your-meal-backend:server');
-var http = require('http');
-
+var app = require("../app");
+var debug = require("debug")("share-your-meal-backend:server");
+var http = require("http");
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '8000');
-app.set('port', port);
+var port = normalizePort(process.env.PORT || "8000");
+app.set("port", port);
 
 /**
  * Create HTTP server.
@@ -24,39 +23,44 @@ var server = http.createServer(app);
 
 // --------------------------------------------Socket.io-------------------------------------------------------------
 
-const socket = require ('socket.io')
+const socket = require("socket.io");
 const io = socket(server, {
   cors: {
     origin: "*",
-    methods: ["GET", "POST"]
-  }
-})
-
-let users = []
-
-io.on('connection', (socket) => {
-  socket.emit('myId', socket.id)
-//------------------------------------------
-  socket.on('newGuestUser', (newGuestUser)=> {
-    users.push(newGuestUser)
-    io.emit('connectedUsers', users)
-  })
-// ------------------------------------------
-  socket.on('callUser', ({userToCall, from, signal}) => {
-    console.log({userToCall, from})
-    io.to(userToCall).emit('incomingCall', { from, signal })
-  })
-// ------------------------------------------
-socket.on('acceptCall', ({userWhoCalled, signal}) => {
-    io.to(userWhoCalled).emit('acceptedCall', signal)
-})
-// ------------------------------------------
-socket.on("disconnect", (reason) => {
-  console.log(reason)
-  users = users.filter(user => user.id !== socket.id)
-  io.emit('connectedUsers', users)
+    methods: ["GET", "POST"],
+  },
 });
-})
+
+let users = [];
+
+io.on("connection", (socket) => {
+  socket.emit("myId", socket.id);
+  //------------------------------------------
+  socket.on("newGuestUser", (newGuestUser) => {
+    users.push(newGuestUser);
+    io.emit("connectedUsers", users);
+  });
+  // ------------------------------------------
+  socket.on("callUser", ({ userToCall, from, signal }) => {
+    console.log({ userToCall, from });
+    io.to(userToCall).emit("incomingCall", { from, signal });
+  });
+  // ------------------------------------------
+  socket.on("acceptCall", ({ userWhoCalled, signal }) => {
+    io.to(userWhoCalled).emit("acceptedCall", signal);
+  });
+  // ------------------------------------------
+  socket.on("disconnect", (reason) => {
+    console.log(reason);
+    users = users.filter((user) => user.id !== socket.id);
+    io.emit("connectedUsers", users);
+  });
+  // ------------------------------------------
+  socket.on("endCall", (userWhoCalled) => {
+    console.log({ userWhoCalled });
+    io.to(userWhoCalled).emit("endCall");
+  });
+});
 
 //-----------------------------------------------------------------------------------------------------------------------
 
@@ -65,8 +69,8 @@ socket.on("disconnect", (reason) => {
  */
 
 server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+server.on("error", onError);
+server.on("listening", onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -93,22 +97,20 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== 'listen') {
+  if (error.syscall !== "listen") {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+    case "EACCES":
+      console.error(bind + " requires elevated privileges");
       process.exit(1);
       break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+    case "EADDRINUSE":
+      console.error(bind + " is already in use");
       process.exit(1);
       break;
     default:
@@ -122,13 +124,7 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-    console.log(`server is running on port ${port}`)
-  debug('Listening on ' + bind);
-  
+  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+  console.log(`server is running on port ${port}`);
+  debug("Listening on " + bind);
 }
-
-
-
