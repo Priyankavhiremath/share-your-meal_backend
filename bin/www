@@ -49,6 +49,11 @@ io.on("connection", (socket) => {
   socket.on("acceptCall", ({ userWhoCalled, signal }) => {
     io.to(userWhoCalled).emit("acceptedCall", signal);
   });
+  //-------------------------------------------
+  socket.on("rejectCall", (userWhoCalled) => {
+    console.log("I want to reject the call");
+    io.to(userWhoCalled).emit("rejectedCall");
+  });
   // ------------------------------------------
   socket.on("disconnect", (reason) => {
     console.log(reason);
@@ -57,7 +62,6 @@ io.on("connection", (socket) => {
   });
   // ------------------------------------------
   socket.on("endCall", (userWhoCalled) => {
-    console.log({ userWhoCalled });
     io.to(userWhoCalled).emit("endCall");
   });
 });
