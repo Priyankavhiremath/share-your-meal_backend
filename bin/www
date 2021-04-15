@@ -21,87 +21,46 @@ app.set("port", port);
 
 var server = http.createServer(app);
 
-// --------------------------------------------Socket.io video-------------------------------------------------------------
+// --------------------------------------------Socket.io-------------------------------------------------------------
 
 const socket = require("socket.io");
 const io = socket(server, {
   cors: {
     origin: "*",
-    methods: ["GET", "POST"]
-  }
-})
-
-let users = []
-let usersMessage = [];
-
-const getRandomPastelColor = () => {
-  const hue = Math.floor(Math.random() * 360);
-  const pastelColor = 'hsl(' + hue + ', 100%, 80%)';
-  return pastelColor
-}
-
-io.on('connection', (socket) => {
-  socket.emit('myId', socket.id)
-//------------------------------------------
-  socket.on('newGuestUser', (newGuestUser)=> {
-    users.push(newGuestUser)
-    io.emit('connectedUsers', users)
-  })
-// ------------------------------------------
-  socket.on('callUser', ({userToCall, from, signal}) => {
-    console.log({userToCall, from})
-    io.to(userToCall).emit('incomingCall', { from, signal })
-  })
-// ------------------------------------------
-socket.on('acceptCall', ({userWhoCalled, signal}) => {
-    io.to(userWhoCalled).emit('acceptedCall', signal)
-})
-// ------------------------------------------
-socket.on("disconnect", () => {
-  users = users.filter(user => user.id !== socket.id)
-  io.emit('connectedUsers', users)
-});
-// ----------------------------------------------
-  
-socket.on("newUser", ({ username }) => {
-  socket.username = username;
-  socket.color = getRandomPastelColor();
-
-  usersMessage.push({
-    username,
-    id: socket.id
-  });
-
-  socket.emit("loginSuccess", {
-    numberOfConnectedUsers: usersMessage.length,
-    usersMessage,
-  });
-
-  socket.broadcast.emit("userJoined", {
-    username,
-    usersMessage,
-    numberOfConnectedUsers: usersMessage.length,
-  });
+    methods: ["GET", "POST"],
+  },
 });
 
-socket.on("newMessage", (message) => {
-  socket.broadcast.emit("newMessage", {
-    from: socket.username,
-    message,
-    color: socket.color
+let users = [];
+
+io.on("connection", (socket) => {
+  socket.emit("myId", socket.id);
+  //------------------------------------------
+  socket.on("newGuestUser", (newGuestUser) => {
+    users.push(newGuestUser);
+    io.emit("connectedUsers", users);
+  });
+  // ------------------------------------------
+  socket.on("callUser", ({ userToCall, from, signal }) => {
+    console.log({ userToCall, from });
+    io.to(userToCall).emit("incomingCall", { from, signal });
+  });
+  // ------------------------------------------
+  socket.on("acceptCall", ({ userWhoCalled, signal }) => {
+    io.to(userWhoCalled).emit("acceptedCall", signal);
+  });
+  // ------------------------------------------
+  socket.on("disconnect", (reason) => {
+    console.log(reason);
+    users = users.filter((user) => user.id !== socket.id);
+    io.emit("connectedUsers", users);
+  });
+  // ------------------------------------------
+  socket.on("endCall", (userWhoCalled) => {
+    console.log({ userWhoCalled });
+    io.to(userWhoCalled).emit("endCall");
   });
 });
-
-socket.on("disconnect", () => {
-  usersMessage = usersMessage.filter(user => user.id !== socket.id)
-
-  socket.broadcast.emit("userDisconnected", {
-    username: socket.username,
-    usersMessage,
-    numberOfConnectedUsers: usersMessage.length,
-  });
-});
-})
 
 //-----------------------------------------------------------------------------------------------------------------------
 
