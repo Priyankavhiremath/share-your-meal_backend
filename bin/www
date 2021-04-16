@@ -48,15 +48,10 @@ io.on("connection", (socket) => {
     socket.username = name;
     socket.color = getRandomPastelColor();
 
-    // socket.emit("loginSuccess", {
-    //   numberOfConnectedUsers: users.length,
-    //   users,
-    // });
+    socket.emit("loginSuccess");
 
     socket.broadcast.emit("userJoined", {
-      name,
-      // users,
-      // numberOfConnectedUsers: users.length,
+      name
     });
   });
   // ------------------------------------------
@@ -70,15 +65,17 @@ io.on("connection", (socket) => {
   });
   // ------------------------------------------
   socket.on("disconnect", (reason) => {
-    console.log(reason);
-    users = users.filter((user) => user.id !== socket.id);
-    io.emit("connectedUsers", users);
+    // console.log(reason);
+
+    console.log({name: socket.username })
 
     socket.broadcast.emit("userDisconnected", {
-      name: socket.name,
-      // users,
-      // numberOfConnectedUsers: users.length,
+      name: socket.username
     });
+
+
+    users = users.filter((user) => user.id !== socket.id);
+    io.emit("connectedUsers", users);
   });
   // ------------------------------------------
   socket.on("endCall", (userWhoCalled) => {
@@ -89,11 +86,10 @@ io.on("connection", (socket) => {
   // ------------------------------------------
   socket.on("newMessage", (message) => {
     socket.broadcast.emit("newMessage", {
-      from: socket.name,
+      from: socket.username,
       message,
       color: socket.color
     });
-    console.log(socket.name)
   });
 });
 
