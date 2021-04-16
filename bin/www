@@ -42,8 +42,8 @@ const getRandomPastelColor = () => {
 io.on("connection", (socket) => {
   socket.emit("myId", socket.id);
   //------------------------------------------
-  socket.on("newGuestUser", ({ id, name ,country, language }) => {
-    users.push({ id, name ,country, language });
+  socket.on("newGuestUser", ({ id, name ,country, language, comStyle }) => {
+    users.push({ id, name ,country, language, comStyle });
     io.emit("connectedUsers", users);
     socket.username = name;
     socket.color = getRandomPastelColor();
