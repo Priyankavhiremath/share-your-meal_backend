@@ -42,8 +42,8 @@ const getRandomPastelColor = () => {
 io.on("connection", (socket) => {
   socket.emit("myId", socket.id);
   //------------------------------------------
-  socket.on("newGuestUser", ({ id, name ,country, location }) => {
-    users.push({ id, name ,country, location });
+  socket.on("newGuestUser", ({ id, name ,country, language }) => {
+    users.push({ id, name ,country, language });
     io.emit("connectedUsers", users);
     socket.username = name;
     socket.color = getRandomPastelColor();
@@ -69,16 +69,11 @@ io.on("connection", (socket) => {
     io.to(userWhoCalled).emit("rejectedCall");
   });
   // ------------------------------------------
-  socket.on("disconnect", (reason) => {
-    // console.log(reason);
-
+  socket.on("disconnect", () => {
     console.log({name: socket.username })
-
     socket.broadcast.emit("userDisconnected", {
       name: socket.username
     });
-
-
     users = users.filter((user) => user.id !== socket.id);
     io.emit("connectedUsers", users);
   });
