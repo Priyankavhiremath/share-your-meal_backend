@@ -44,6 +44,7 @@ io.on("connection", (socket) => {
   //------------------------------------------
   socket.on("newGuestUser", ({ id, name ,country, language, comStyle }) => {
     users.push({ id, name ,country, language, comStyle });
+    
     io.emit("connectedUsers", users);
     socket.username = name;
     socket.color = getRandomPastelColor();
@@ -62,10 +63,13 @@ io.on("connection", (socket) => {
   // ------------------------------------------
   socket.on("acceptCall", ({ userWhoCalled, signal }) => {
     io.to(userWhoCalled).emit("acceptedCall", signal);
+    users = users.filter((user) => user.id !== socket.id && user.id !==userWhoCalled);
+    console.log(users);
+    io.emit("connectedUsers", users);
   });
   //-------------------------------------------
   socket.on("rejectCall", (userWhoCalled) => {
-    console.log(`I want to reject the call from F${userWhoCalled}`);
+    console.log(`I want to reject the call from ${userWhoCalled}`);
     io.to(userWhoCalled).emit("rejectedCall");
   });
   // ------------------------------------------
@@ -75,6 +79,7 @@ io.on("connection", (socket) => {
       name: socket.username
     });
     users = users.filter((user) => user.id !== socket.id);
+    console.log(" users have changed");
     io.emit("connectedUsers", users);
   });
   // ------------------------------------------
