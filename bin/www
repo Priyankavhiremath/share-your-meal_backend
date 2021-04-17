@@ -51,7 +51,7 @@ io.on("connection", (socket) => {
   });
   //-------------------------------------------
   socket.on("rejectCall", (userWhoCalled) => {
-    console.log("I want to reject the call");
+    console.log(`I want to reject the call from F${userWhoCalled}`);
     io.to(userWhoCalled).emit("rejectedCall");
   });
   // ------------------------------------------
