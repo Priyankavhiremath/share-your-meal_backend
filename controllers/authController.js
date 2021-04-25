@@ -1,7 +1,7 @@
 const RegisteredUser = require("../models/registeredUser");
 const bcrypt = require("bcrypt");
 
-const login = async (req, res, next) => {
+const login = async (req, res) => {
   const { email, password } = req.body;
   let user = await RegisteredUser.findOne({ email });
   if (!user) return res.status(400).send("Invalid Credentials");

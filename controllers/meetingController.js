@@ -1,7 +1,7 @@
 // do we need meeting controller? if yes, why?
 const Meeting = require('../models/meeting')
 
-const getAllMeetings = async (req, res, next) => {
+const getAllMeetings = async (req, res) => {
     try {
         const getMeetings = await Meeting.find([])
         res.json(getMeetings)

@@ -1,6 +1,6 @@
 const Guest = require("../models/guest") //do we need to capitalize guest and other models?
 
-const getAllGuests = async (req, res, next) => {
+const getAllGuests = async (req, res) => {
     try {
         const getGuest = await Guest.find([])
         res.json(getGuest)
@@ -9,7 +9,7 @@ const getAllGuests = async (req, res, next) => {
     }
 }
 
-const createOneGuest = async (req, res, next) => {
+const createOneGuest = async (req, res) => {
     const { nickName, languages, location } = req.body;
     try{
         const createGuest = await Guest.create({ nickName, languages, location })

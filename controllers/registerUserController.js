@@ -2,7 +2,7 @@ const RegisteredUser = require("../models/registeredUser");
 const bcrypt = require("bcrypt");
 
 // READ
-const getAllUsers = async (req, res, next) => {
+const getAllUsers = async (req, res) => {
   try {
     const getUsers = await RegisteredUser.find();
     res.json(getUsers);
@@ -12,7 +12,7 @@ const getAllUsers = async (req, res, next) => {
 };
 
 // READ
-const getOneUser = async (req, res, next) => {
+const getOneUser = async (req, res) => {
   const { id } = req.params;
   try {
     const getUser = await RegisteredUser.findById({ _id: id });
@@ -24,7 +24,7 @@ const getOneUser = async (req, res, next) => {
 };
 
 // READ
-const getMe = async (req, res, next) => {
+const getMe = async (req, res) => {
   const id = req.user._id;
   //   console.log(id);
   try {
@@ -38,7 +38,7 @@ const getMe = async (req, res, next) => {
 };
 
 // CREATE
-const createOneUser = async (req, res, next) => {
+const createOneUser = async (req, res) => {
   const { email, password, nickName, location, languages } = req.body;
   try {
     const newUser = new RegisteredUser({
@@ -58,7 +58,7 @@ const createOneUser = async (req, res, next) => {
 };
 
 // UPDATE
-const update = async (req, res, next) => {
+const update = async (req, res) => {
   const { id } = req.params;
   const { property, value } = req.body;
   console.log({ id, property, value });
