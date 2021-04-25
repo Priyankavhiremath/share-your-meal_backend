@@ -20,8 +20,7 @@ const registeredUserSchema = new mongoose.Schema({
 registeredUserSchema.methods.createToken = function () {
     const payload = { _id: this._id, email: this.email }
     const secretKey = process.env.JWT_SECRET;
-    const token = jwt.sign(payload, secretKey)
-    return token
+    return token = jwt.sign(payload, secretKey)
 }
 
 const RegisteredUser = mongoose.model('Register', registeredUserSchema);
